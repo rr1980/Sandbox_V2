@@ -31,13 +31,13 @@ namespace Tests.RR.LoggerService
         [TestMethod(), TestCategory("LoggerFile")]
         public void AddFileLogger_Throw()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => serviceCollection.AddFileLogger(null));
+            Assert.ThrowsException<FileLoggerException>(() => serviceCollection.AddFileLogger(null));
 
             FileLoggerConfiguration _loggerConfiguration = new FileLoggerConfiguration()
             {
                 LogLevel = null
             };
-            Assert.ThrowsException<ArgumentException>(() => serviceCollection.AddFileLogger(_loggerConfiguration));
+            Assert.ThrowsException<FileLoggerException>(() => serviceCollection.AddFileLogger(_loggerConfiguration));
         }
 
         [TestMethod(), TestCategory("LoggerFile")]

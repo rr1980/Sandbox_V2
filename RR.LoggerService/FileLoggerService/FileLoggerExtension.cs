@@ -10,27 +10,34 @@ namespace RR.LoggerService.FileLoggerService
     {
         public static IServiceCollection AddFileLogger(this IServiceCollection services, FileLoggerConfiguration loggerConfiguration)
         {
-            #region throwExceptions
-
-            if (loggerConfiguration == null)
+            try
             {
-                throw new ArgumentNullException("loggerConfiguration");
+                #region throwExceptions
+
+                if (loggerConfiguration == null)
+                {
+                    throw new ArgumentNullException("loggerConfiguration");
+                }
+
+                if (loggerConfiguration.LogLevel == null || !loggerConfiguration.LogLevel.Any())
+                {
+                    throw new ArgumentException("Collection loggerConfiguration.LogLevel is null or count = zero!", "loggerConfiguration.LogLevel");
+                }
+
+                #endregion throwExceptions
+
+                services.AddLogging(loggingBuilder =>
+                {
+                    //loggingBuilder.ClearProviders();
+                    loggingBuilder.AddProvider(new LoggerProvider(new FileLoggerAction(loggerConfiguration), loggerConfiguration)).SetMinimumLevel(LogLevel.Trace);
+                });
+
+                return services;
             }
-
-            if (loggerConfiguration.LogLevel == null || !loggerConfiguration.LogLevel.Any())
+            catch (Exception ex)
             {
-                throw new ArgumentException("Collection loggerConfiguration.LogLevel is null or count = zero!", "loggerConfiguration.LogLevel");
+                throw new FileLoggerException("AddFileLogger faild!", ex);
             }
-
-            #endregion throwExceptions
-
-            services.AddLogging(loggingBuilder =>
-            {
-                //loggingBuilder.ClearProviders();
-                loggingBuilder.AddProvider(new LoggerProvider(new FileLoggerAction(loggerConfiguration), loggerConfiguration)).SetMinimumLevel(LogLevel.Trace);
-            });
-
-            return services;
         }
     }
 }

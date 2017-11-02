@@ -31,13 +31,13 @@ namespace Tests.RR.LoggerService
         [TestMethod(), TestCategory("LoggerDebug")]
         public void AddDebugLogger_Throw()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => serviceCollection.AddDebugLogger(null));
+            Assert.ThrowsException<DebugLoggerException>(() => serviceCollection.AddDebugLogger(null));
 
             DebugLoggerConfiguration _loggerConfiguration = new DebugLoggerConfiguration()
             {
                 LogLevel = null
             };
-            Assert.ThrowsException<ArgumentException>(() => serviceCollection.AddDebugLogger(_loggerConfiguration));
+            Assert.ThrowsException<DebugLoggerException>(() => serviceCollection.AddDebugLogger(_loggerConfiguration));
         }
 
         [TestMethod(), TestCategory("LoggerDebug")]

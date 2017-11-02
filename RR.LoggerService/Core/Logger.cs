@@ -11,22 +11,29 @@ namespace RR.LoggerService.Core
 
         public Logger(string categoryName, ILoggerAction loggerAction)
         {
-            #region throwExceptions
-
-            if (string.IsNullOrEmpty(categoryName))
+            try
             {
-                throw new ArgumentNullException("categoryName");
-            }
+                #region throwExceptions
 
-            if (loggerAction == null)
+                if (string.IsNullOrEmpty(categoryName))
+                {
+                    throw new ArgumentNullException("categoryName");
+                }
+
+                if (loggerAction == null)
+                {
+                    throw new ArgumentNullException("loggerAction");
+                }
+
+                #endregion throwExceptions
+
+                _categoryName = categoryName;
+                _loggerAction = loggerAction;
+            }
+            catch (Exception ex)
             {
-                throw new ArgumentNullException("loggerAction");
+                throw new LoggerException("Logger ctor faild!", ex);
             }
-
-            #endregion throwExceptions
-
-            _categoryName = categoryName;
-            _loggerAction = loggerAction;
         }
 
         public IDisposable BeginScope<TState>(TState state)
@@ -41,7 +48,14 @@ namespace RR.LoggerService.Core
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            _loggerAction.Log(state.ToString());
+            try
+            {
+                _loggerAction.Log(state.ToString());
+            }
+            catch (Exception ex)
+            {
+                throw new LoggerException("Logger Log faild!", ex);
+            }
         }
     }
 }

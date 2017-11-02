@@ -14,32 +14,46 @@ namespace RR.LoggerService.Core
 
         public LoggerProvider(ILoggerAction loggerAction, ILoggerConfiguration loggerConfiguration)
         {
-            #region throwExceptions
-
-            if (loggerAction == null)
+            try
             {
-                throw new ArgumentNullException("loggerAction");
-            }
+                #region throwExceptions
 
-            if (loggerConfiguration == null)
+                if (loggerAction == null)
+                {
+                    throw new ArgumentNullException("loggerAction");
+                }
+
+                if (loggerConfiguration == null)
+                {
+                    throw new ArgumentNullException("loggerConfiguration");
+                }
+
+                if (loggerConfiguration.LogLevel == null || !loggerConfiguration.LogLevel.Any())
+                {
+                    throw new ArgumentException("Collection loggerConfiguration.LogLevel is null or count = zero!", "loggerConfiguration.LogLevel");
+                }
+
+                #endregion throwExceptions
+
+                _loggerAction = loggerAction;
+                _loggerConfiguration = loggerConfiguration;
+            }
+            catch (Exception ex)
             {
-                throw new ArgumentNullException("loggerConfiguration");
+                throw new LoggerException("LoggerProvider ctor faild!", ex);
             }
-
-            if (loggerConfiguration.LogLevel == null || !loggerConfiguration.LogLevel.Any())
-            {
-                throw new ArgumentException("Collection loggerConfiguration.LogLevel is null or count = zero!", "loggerConfiguration.LogLevel");
-            }
-
-            #endregion throwExceptions
-
-            _loggerAction = loggerAction;
-            _loggerConfiguration = loggerConfiguration;
         }
 
         public ILogger CreateLogger(string categoryName)
         {
-            return _loggers.GetOrAdd(categoryName, cName => new Logger(cName, _loggerAction));
+            try
+            {
+                return _loggers.GetOrAdd(categoryName, cName => new Logger(cName, _loggerAction));
+            }
+            catch (Exception ex)
+            {
+                throw new LoggerException("LoggerProvider CreateLogger faild!", ex);
+            }
         }
 
         public void Dispose()
