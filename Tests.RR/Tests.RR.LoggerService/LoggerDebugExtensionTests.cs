@@ -1,8 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RR.LoggerService;
-using RR.LoggerService.Core;
 using RR.LoggerService.DebugLoggerService;
 using System;
 using Tests.Extensions;
@@ -12,8 +10,8 @@ namespace Tests.RR.LoggerService
     [TestClass]
     public class LoggerDebugExtensionTests
     {
-        ServiceCollection serviceCollection;
-        ServiceProvider serviceProvider;
+        private ServiceCollection serviceCollection;
+        private ServiceProvider serviceProvider;
 
         [TestInitialize(), TestCategory("LoggerDebug")]
         public void LoggerDebugExtensionTests_Init()
@@ -33,12 +31,11 @@ namespace Tests.RR.LoggerService
         [TestMethod(), TestCategory("LoggerDebug")]
         public void AddDebugLogger_Throw()
         {
-            Assert.ThrowsException<ArgumentNullException>(()=> serviceCollection.AddDebugLogger(null));
+            Assert.ThrowsException<ArgumentNullException>(() => serviceCollection.AddDebugLogger(null));
 
             DebugLoggerConfiguration _loggerConfiguration = new DebugLoggerConfiguration()
             {
                 LogLevel = null
-
             };
             Assert.ThrowsException<ArgumentException>(() => serviceCollection.AddDebugLogger(_loggerConfiguration));
         }

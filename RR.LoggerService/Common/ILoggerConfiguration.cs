@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 
 namespace RR.LoggerService.Common
 {
-    public interface ILoggerConfiguration
+    internal interface ILoggerConfiguration
     {
         ConcurrentDictionary<string, LogLevel> LogLevel { get; set; }
     }

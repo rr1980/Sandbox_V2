@@ -1,9 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RR.LoggerService;
-using RR.LoggerService.Core;
-using RR.LoggerService.DebugLoggerService;
 using RR.LoggerService.FileLoggerService;
 using System;
 using Tests.Extensions;
@@ -13,8 +10,8 @@ namespace Tests.RR.LoggerService
     [TestClass]
     public class LoggerFileExtensionTests
     {
-        ServiceCollection serviceCollection;
-        ServiceProvider serviceProvider;
+        private ServiceCollection serviceCollection;
+        private ServiceProvider serviceProvider;
 
         [TestInitialize(), TestCategory("LoggerFile")]
         public void LoggerFileExtensionTests_Init()
@@ -34,12 +31,11 @@ namespace Tests.RR.LoggerService
         [TestMethod(), TestCategory("LoggerFile")]
         public void AddFileLogger_Throw()
         {
-            Assert.ThrowsException<ArgumentNullException>(()=> serviceCollection.AddFileLogger(null));
+            Assert.ThrowsException<ArgumentNullException>(() => serviceCollection.AddFileLogger(null));
 
             FileLoggerConfiguration _loggerConfiguration = new FileLoggerConfiguration()
             {
                 LogLevel = null
-
             };
             Assert.ThrowsException<ArgumentException>(() => serviceCollection.AddFileLogger(_loggerConfiguration));
         }

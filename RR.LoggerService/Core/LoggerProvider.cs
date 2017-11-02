@@ -1,14 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
 using RR.LoggerService.Common;
-using RR.LoggerService.Core;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
 
 namespace RR.LoggerService.Core
 {
-
-    class LoggerProvider : ILoggerProvider
+    internal class LoggerProvider : ILoggerProvider
     {
         private readonly ILoggerConfiguration _loggerConfiguration;
         private readonly ConcurrentDictionary<string, ILogger> _loggers = new ConcurrentDictionary<string, ILogger>();
@@ -32,7 +30,8 @@ namespace RR.LoggerService.Core
             {
                 throw new ArgumentException("Collection loggerConfiguration.LogLevel is null or count = zero!", "loggerConfiguration.LogLevel");
             }
-            #endregion
+
+            #endregion throwExceptions
 
             _loggerAction = loggerAction;
             _loggerConfiguration = loggerConfiguration;

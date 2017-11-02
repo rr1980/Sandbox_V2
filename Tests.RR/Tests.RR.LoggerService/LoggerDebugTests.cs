@@ -1,10 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RR.LoggerService;
 using RR.LoggerService.DebugLoggerService;
-using RR.LoggerService.FileLoggerService;
-using System;
 using Tests.Extensions;
 
 namespace Tests.RR.Logger
@@ -12,7 +9,7 @@ namespace Tests.RR.Logger
     [TestClass]
     public class LoggerDebugTests
     {
-        ILoggerFactory loggerFactory;
+        private ILoggerFactory loggerFactory;
 
         [TestInitialize(), TestCategory("LoggerDebug")]
         public void LoggerDebugTests_Init()

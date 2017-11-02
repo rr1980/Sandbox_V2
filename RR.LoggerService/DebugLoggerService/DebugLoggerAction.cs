@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace RR.LoggerService.DebugLoggerService
 {
-    public class DebugLoggerAction : ILoggerAction
+    internal class DebugLoggerAction : ILoggerAction
     {
         private DebugLoggerConfiguration _loggerConfiguration;
 

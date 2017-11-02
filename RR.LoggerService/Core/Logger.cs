@@ -4,8 +4,7 @@ using System;
 
 namespace RR.LoggerService.Core
 {
-
-    class Logger : ILogger
+    internal class Logger : ILogger
     {
         private readonly string _categoryName;
         private readonly ILoggerAction _loggerAction;
@@ -13,6 +12,7 @@ namespace RR.LoggerService.Core
         public Logger(string categoryName, ILoggerAction loggerAction)
         {
             #region throwExceptions
+
             if (string.IsNullOrEmpty(categoryName))
             {
                 throw new ArgumentNullException("categoryName");
@@ -22,7 +22,8 @@ namespace RR.LoggerService.Core
             {
                 throw new ArgumentNullException("loggerAction");
             }
-            #endregion
+
+            #endregion throwExceptions
 
             _categoryName = categoryName;
             _loggerAction = loggerAction;

@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace RR.LoggerService.FileLoggerService
 {
-    public class FileLoggerAction : ILoggerAction
+    internal class FileLoggerAction : ILoggerAction
     {
         private FileLoggerConfiguration _loggerConfiguration;
 

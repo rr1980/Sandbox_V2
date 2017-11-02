@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using RR.LoggerService.Common;
 using RR.LoggerService.Core;
 using System;
 using System.Linq;
@@ -12,6 +11,7 @@ namespace RR.LoggerService.DebugLoggerService
         public static IServiceCollection AddDebugLogger(this IServiceCollection services, DebugLoggerConfiguration loggerConfiguration)
         {
             #region throwExceptions
+
             if (loggerConfiguration == null)
             {
                 throw new ArgumentNullException("loggerConfiguration");
@@ -21,7 +21,8 @@ namespace RR.LoggerService.DebugLoggerService
             {
                 throw new ArgumentException("Collection loggerConfiguration.LogLevel is null or count = zero!", "loggerConfiguration.LogLevel");
             }
-            #endregion
+
+            #endregion throwExceptions
 
             services.AddLogging(loggingBuilder =>
             {
