@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 
 namespace RR.LoggerService.Common
 {
-    internal interface ILoggerConfiguration
+    public interface ILoggerConfiguration
     {
         LogLevel MinLevel { get; set; }
         LogLevel SelfLogLevel { get; set; }

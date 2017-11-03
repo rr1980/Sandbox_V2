@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RR.LoggerService;
+using RR.LoggerService.Core;
 using RR.LoggerService.DebugLoggerService;
 using System;
 using System.Collections.Generic;
@@ -32,13 +34,13 @@ namespace Tests.RR.LoggerService
         [TestMethod(), TestCategory("LoggerDebug")]
         public void AddDebugLogger_Throw()
         {
-            Assert.ThrowsException<DebugLoggerException>(() => serviceCollection.AddDebugLogger(null));
+            Assert.ThrowsException<LoggerException>(() => serviceCollection.AddRRLogger<DebugLoggerConfiguration, DebugLoggerAction>("DebugLogger", null));
 
             DebugLoggerConfiguration _loggerConfiguration = new DebugLoggerConfiguration()
             {
                 LogLevels = null
             };
-            Assert.ThrowsException<DebugLoggerException>(() => serviceCollection.AddDebugLogger(_loggerConfiguration));
+            Assert.ThrowsException<LoggerException>(() => serviceCollection.AddRRLogger<DebugLoggerConfiguration, DebugLoggerAction>("DebugLogger", _loggerConfiguration));
         }
 
         [TestMethod(), TestCategory("LoggerDebug")]
@@ -47,7 +49,7 @@ namespace Tests.RR.LoggerService
             DebugLoggerConfiguration _loggerConfiguration = new DebugLoggerConfiguration();
             _loggerConfiguration.LogLevels.GetOrAdd("LoggerDebugTest",  LogLevel.Trace );
 
-            AssertH.DoesNotThrow(() => serviceCollection.AddDebugLogger(_loggerConfiguration));
+            AssertH.DoesNotThrow(() => serviceCollection.AddRRLogger<DebugLoggerConfiguration, DebugLoggerAction>("DebugLogger", _loggerConfiguration));
         }
     }
 }

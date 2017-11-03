@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RR.LoggerService;
+using RR.LoggerService.Core;
 using RR.LoggerService.FileLoggerService;
 using System.Collections.Generic;
 using Tests.Extensions;
@@ -23,7 +25,7 @@ namespace Tests.RR.Logger
             _loggerConfiguration.LogLevels.GetOrAdd("LoggerFileTest",  LogLevel.Trace );
             //_loggerConfiguration.MinLevel = LogLevel.Warning;
 
-            serviceCollection.AddFileLogger(_loggerConfiguration);
+            AssertH.DoesNotThrow(() => serviceCollection.AddRRLogger<FileLoggerConfiguration, FileLoggerAction>("FileLogger", _loggerConfiguration));
 
             ServiceProvider serviceProvider = null;
             AssertH.DoesNotThrow(() => serviceProvider = serviceCollection.BuildServiceProvider());

@@ -1,13 +1,11 @@
-﻿using RR.LoggerService.Common;
+﻿using Microsoft.Extensions.Logging;
+using RR.LoggerService.Common;
 using System;
 using System.Diagnostics;
-using System.Linq;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
 namespace RR.LoggerService.DebugLoggerService
 {
-    internal class DebugLoggerAction : ILoggerAction
+    public class DebugLoggerAction : ILoggerAction
     {
         private DebugLoggerConfiguration _loggerConfiguration;
         private readonly ILogger _selfLogger;
@@ -32,11 +30,6 @@ namespace RR.LoggerService.DebugLoggerService
                 throw new ArgumentNullException("selfLogger");
             }
 
-            if (loggerConfiguration.LogLevels == null || !loggerConfiguration.LogLevels.Any())
-            {
-                throw new ArgumentException("Collection loggerConfiguration.LogLevel is null or count = zero!", "loggerConfiguration.LogLevel");
-            }
-
             #endregion throwExceptions
 
             _name = name;
@@ -48,7 +41,7 @@ namespace RR.LoggerService.DebugLoggerService
         public void Log<TState>(string categoryName, LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
             Debug.WriteLine(DateTime.Now + " " + logLevel + " : " + categoryName + " : " + formatter(state, exception));
-            _selfLogger.LogTrace("DebugLoggerAction Log run: '"+ categoryName + "'");
+            _selfLogger.LogTrace("DebugLoggerAction Log run: '" + categoryName + "'");
         }
     }
 }

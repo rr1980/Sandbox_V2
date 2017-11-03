@@ -10,31 +10,45 @@ namespace RR.LoggerService.Core
     {
         internal static LogLevel GetFilterLogLvl(string categoryName, ILoggerConfiguration loggerConfiguration)
         {
-            if (loggerConfiguration.LogLevels.TryGetValue(categoryName, out var l))
+            try
             {
-                return l;
-            }
-            else
-            {
-                var strA = categoryName.Split(".");
-                for (int i = strA.Length; i > 0; i--)
+                if (loggerConfiguration.LogLevels.TryGetValue(categoryName, out var l))
                 {
-
-                    var v = String.Join(".", strA.Take(i));
-                    if (loggerConfiguration.LogLevels.TryGetValue(v, out var ll))
+                    return l;
+                }
+                else
+                {
+                    var strA = categoryName.Split(".");
+                    for (int i = strA.Length; i > 0; i--)
                     {
-                        return ll;
+
+                        var v = String.Join(".", strA.Take(i));
+                        if (loggerConfiguration.LogLevels.TryGetValue(v, out var ll))
+                        {
+                            return ll;
+                        }
                     }
+
                 }
 
+                return loggerConfiguration.MinLevel;
             }
-
-            return loggerConfiguration.MinLevel;
+            catch (Exception ex)
+            {
+                throw new LoggerException("LoggerHelper GetFilterLogLvl faild for: " + categoryName, ex);
+            }
         }
 
         internal static ILoggerAction CreateInstance_ILoggerAction<T>(string name, ILoggerConfiguration loggerConfiguration, ILogger selfLogger) where T : class
         {
-            return Activator.CreateInstance(typeof(T), new object[] { name, loggerConfiguration, selfLogger }) as ILoggerAction;
+            try
+            {
+                return Activator.CreateInstance(typeof(T), new object[] { name, loggerConfiguration, selfLogger }) as ILoggerAction;
+            }
+            catch(Exception ex)
+            {
+                throw new LoggerException("LoggerHelper CreateInstance_ILoggerAction faild for: " + name, ex);
+            }
         }
 
         internal static async void FireAndForget(this Task task)

@@ -75,6 +75,9 @@ namespace RR.LoggerService.Core
                     return;
                 }
 
+
+                
+
                 _selfLogger?.LogTrace("Logger Log run '" + _categoryName + "' (fire and forget)");
                 Task.Run(() => _loggerAction.Log(_categoryName, logLevel, eventId, state, exception, formatter));
             }

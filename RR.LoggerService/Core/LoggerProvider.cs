@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace RR.LoggerService.Core
 {
-    internal class LoggerProvider<T> : ILoggerProvider where T : class
+    internal class LoggerProvider<T> : ILoggerProvider where T : class, ILoggerAction 
     {
         private readonly ILoggerConfiguration _loggerConfiguration;
         private readonly ConcurrentDictionary<string, ILogger> _loggers = new ConcurrentDictionary<string, ILogger>();

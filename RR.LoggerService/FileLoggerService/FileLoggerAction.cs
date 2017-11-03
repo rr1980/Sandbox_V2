@@ -1,19 +1,24 @@
-﻿using RR.LoggerService.Common;
+﻿using Microsoft.Extensions.Logging;
+using RR.LoggerService.Common;
 using System;
 using System.Diagnostics;
-using System.Linq;
-using Microsoft.Extensions.Logging;
 
 namespace RR.LoggerService.FileLoggerService
 {
-    internal class FileLoggerAction : ILoggerAction
+    public class FileLoggerAction : ILoggerAction
     {
         private FileLoggerConfiguration _loggerConfiguration;
         private readonly ILogger _selfLogger;
+        private readonly string _name;
 
-        public FileLoggerAction(FileLoggerConfiguration loggerConfiguration, ILogger selfLogger)
+        public FileLoggerAction(string name, FileLoggerConfiguration loggerConfiguration, ILogger selfLogger)
         {
             #region throwExceptions
+
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
 
             if (loggerConfiguration == null)
             {
@@ -25,20 +30,18 @@ namespace RR.LoggerService.FileLoggerService
                 throw new ArgumentNullException("selfLogger");
             }
 
-            if (loggerConfiguration.LogLevels == null || !loggerConfiguration.LogLevels.Any())
-            {
-                throw new ArgumentException("Collection loggerConfiguration.LogLevel is null or count = zero!", "loggerConfiguration.LogLevel");
-            }
-
             #endregion throwExceptions
 
+            _name = name;
             _loggerConfiguration = loggerConfiguration;
             _selfLogger = selfLogger;
+            _selfLogger.LogTrace("FileLoggerAction init finish for: '" + _name + "'");
         }
 
         public void Log<TState>(string categoryName, LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
             Debug.WriteLine(DateTime.Now + " " + logLevel + " : " + categoryName + " : " + formatter(state, exception));
+            _selfLogger.LogTrace("FileLoggerAction Log run: '" + categoryName + "'");
         }
     }
 }

@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RR.LoggerService;
+using RR.LoggerService.Core;
 using RR.LoggerService.FileLoggerService;
 using System;
 using System.Collections.Generic;
@@ -32,13 +34,12 @@ namespace Tests.RR.LoggerService
         [TestMethod(), TestCategory("LoggerFile")]
         public void AddFileLogger_Throw()
         {
-            Assert.ThrowsException<FileLoggerException>(() => serviceCollection.AddFileLogger(null));
-
+            Assert.ThrowsException<LoggerException>(() => serviceCollection.AddRRLogger<FileLoggerConfiguration, FileLoggerAction>("FileLogger", null));
             FileLoggerConfiguration _loggerConfiguration = new FileLoggerConfiguration()
             {
                 LogLevels = null
             };
-            Assert.ThrowsException<FileLoggerException>(() => serviceCollection.AddFileLogger(_loggerConfiguration));
+            Assert.ThrowsException<LoggerException>(() => serviceCollection.AddRRLogger<FileLoggerConfiguration, FileLoggerAction>("FileLogger", _loggerConfiguration));
         }
 
         [TestMethod(), TestCategory("LoggerFile")]
@@ -47,7 +48,7 @@ namespace Tests.RR.LoggerService
             FileLoggerConfiguration _loggerConfiguration = new FileLoggerConfiguration();
             _loggerConfiguration.LogLevels.GetOrAdd("LoggerFileTest",  LogLevel.Trace );
 
-            AssertH.DoesNotThrow(() => serviceCollection.AddFileLogger(_loggerConfiguration));
+            AssertH.DoesNotThrow(() => serviceCollection.AddRRLogger<FileLoggerConfiguration, FileLoggerAction>("FileLogger", _loggerConfiguration));
         }
     }
 }

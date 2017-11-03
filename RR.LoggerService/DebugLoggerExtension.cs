@@ -1,14 +1,15 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using RR.LoggerService.Common;
 using RR.LoggerService.Core;
 using System;
 using System.Linq;
 
-namespace RR.LoggerService.DebugLoggerService
+namespace RR.LoggerService
 {
-    public static class DebugLoggerExtension
+    public static class RRLoggerExtension
     {
-        public static IServiceCollection AddDebugLogger(this IServiceCollection services, DebugLoggerConfiguration loggerConfiguration, bool cleanAllProviders = false)
+        public static IServiceCollection AddRRLogger<TLoggerConfiguration, TLoggerAction>(this IServiceCollection services, string name, TLoggerConfiguration loggerConfiguration, bool cleanAllProviders = false) where TLoggerConfiguration : ILoggerConfiguration  where TLoggerAction : class, ILoggerAction
         {
             try
             {
@@ -32,14 +33,14 @@ namespace RR.LoggerService.DebugLoggerService
                     {
                         loggingBuilder.ClearProviders();
                     }
-                    loggingBuilder.AddProvider(new LoggerProvider<DebugLoggerAction>("DebugLogger", loggerConfiguration)).SetMinimumLevel(LogLevel.Trace);
+                    loggingBuilder.AddProvider(new LoggerProvider<TLoggerAction>(name, loggerConfiguration)).SetMinimumLevel(LogLevel.Trace);
                 });
 
                 return services;
             }
             catch (Exception ex)
             {
-                throw new DebugLoggerException("AddDebugLogger faild!", ex);
+                throw new LoggerException("AddDebugLogger faild!", ex);
             }
         }
     }
