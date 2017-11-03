@@ -8,7 +8,7 @@ namespace RR.LoggerService.DebugLoggerService
 {
     public static class DebugLoggerExtension
     {
-        public static IServiceCollection AddDebugLogger(this IServiceCollection services, DebugLoggerConfiguration loggerConfiguration)
+        public static IServiceCollection AddDebugLogger(this IServiceCollection services, DebugLoggerConfiguration loggerConfiguration, bool cleanAllProviders = false)
         {
             try
             {
@@ -26,9 +26,14 @@ namespace RR.LoggerService.DebugLoggerService
 
                 #endregion throwExceptions
 
+                var tmp = services.FirstOrDefault(s => s.ServiceType == typeof(ILoggingBuilder));
+
                 services.AddLogging(loggingBuilder =>
                 {
-                    //ClearProviders()
+                    if (cleanAllProviders)
+                    {
+                        loggingBuilder.ClearProviders();
+                    }
                     loggingBuilder.AddProvider(new LoggerProvider(new DebugLoggerAction(loggerConfiguration), loggerConfiguration)).SetMinimumLevel(LogLevel.Trace);
                 });
 

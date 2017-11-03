@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RR.LoggerService.DebugLoggerService;
 using System;
+using System.Collections.Generic;
 using Tests.Extensions;
 
 namespace Tests.RR.LoggerService
@@ -44,7 +45,7 @@ namespace Tests.RR.LoggerService
         public void AddDebugLogger()
         {
             DebugLoggerConfiguration _loggerConfiguration = new DebugLoggerConfiguration();
-            _loggerConfiguration.LogLevel.GetOrAdd("LoggerDebugTest", LogLevel.Trace);
+            _loggerConfiguration.LogLevel.GetOrAdd("LoggerDebugTest",  LogLevel.Trace );
 
             AssertH.DoesNotThrow(() => serviceCollection.AddDebugLogger(_loggerConfiguration));
         }

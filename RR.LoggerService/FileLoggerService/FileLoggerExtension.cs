@@ -8,7 +8,7 @@ namespace RR.LoggerService.FileLoggerService
 {
     public static class FileLoggerExtension
     {
-        public static IServiceCollection AddFileLogger(this IServiceCollection services, FileLoggerConfiguration loggerConfiguration)
+        public static IServiceCollection AddFileLogger(this IServiceCollection services, FileLoggerConfiguration loggerConfiguration, bool cleanAllProviders = false)
         {
             try
             {
@@ -28,7 +28,10 @@ namespace RR.LoggerService.FileLoggerService
 
                 services.AddLogging(loggingBuilder =>
                 {
-                    //loggingBuilder.ClearProviders();
+                    if (cleanAllProviders)
+                    {
+                        loggingBuilder.ClearProviders();
+                    }
                     loggingBuilder.AddProvider(new LoggerProvider(new FileLoggerAction(loggerConfiguration), loggerConfiguration)).SetMinimumLevel(LogLevel.Trace);
                 });
 

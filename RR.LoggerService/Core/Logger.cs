@@ -8,8 +8,9 @@ namespace RR.LoggerService.Core
     {
         private readonly string _categoryName;
         private readonly ILoggerAction _loggerAction;
+        private readonly Func<string, LogLevel, bool> _filter;
 
-        public Logger(string categoryName, ILoggerAction loggerAction)
+        public Logger(string categoryName, Func<string, LogLevel, bool> filter, ILoggerAction loggerAction)
         {
             try
             {
@@ -20,6 +21,11 @@ namespace RR.LoggerService.Core
                     throw new ArgumentNullException("categoryName");
                 }
 
+                if (filter == null)
+                {
+                    throw new ArgumentNullException("filter");
+                }
+
                 if (loggerAction == null)
                 {
                     throw new ArgumentNullException("loggerAction");
@@ -28,6 +34,7 @@ namespace RR.LoggerService.Core
                 #endregion throwExceptions
 
                 _categoryName = categoryName;
+                _filter = filter;
                 _loggerAction = loggerAction;
             }
             catch (Exception ex)
@@ -43,14 +50,21 @@ namespace RR.LoggerService.Core
 
         public bool IsEnabled(LogLevel logLevel)
         {
-            return true;
+            var result= (_filter == null || _filter(_categoryName, logLevel));
+
+            return result;
         }
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
+            if(!IsEnabled(logLevel))
+            {
+                return;
+            }
+
             try
             {
-                _loggerAction.Log(state.ToString());
+                _loggerAction.Log(_categoryName);
             }
             catch (Exception ex)
             {

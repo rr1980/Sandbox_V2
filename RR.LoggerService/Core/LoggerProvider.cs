@@ -2,6 +2,7 @@
 using RR.LoggerService.Common;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RR.LoggerService.Core
@@ -11,6 +12,7 @@ namespace RR.LoggerService.Core
         private readonly ILoggerConfiguration _loggerConfiguration;
         private readonly ConcurrentDictionary<string, ILogger> _loggers = new ConcurrentDictionary<string, ILogger>();
         private readonly ILoggerAction _loggerAction;
+        private readonly Func<string, LogLevel, bool> _filter;
 
         public LoggerProvider(ILoggerAction loggerAction, ILoggerConfiguration loggerConfiguration)
         {
@@ -37,6 +39,32 @@ namespace RR.LoggerService.Core
 
                 _loggerAction = loggerAction;
                 _loggerConfiguration = loggerConfiguration;
+
+                _filter = (category, logLevel) =>
+                {
+                    var lls = _loggerConfiguration.LogLevel.FirstOrDefault(x => category.ToLower().Trim() == x.Key.ToLower().Trim());
+                    if (lls.Key != null)
+                    {
+                        return logLevel >= lls.Value;
+                    }
+
+                    var splts = category.Split(".");
+                    var given = _loggerConfiguration.LogLevel.ToDictionary(x => x.Key, y => y.Value);
+                    var index = 0;
+
+                    while (given.Count > 1 && index < splts.Length)
+                    {
+                        var s = splts[index];
+                        var tmp = given.Where(g => g.Key.Split(".").Length > index);
+                        given = tmp.Where(g => g.Key.Split(".")[index] == s).ToDictionary(x => x.Key, y => y.Value);
+
+                        index++;
+                    }
+
+                    var t = 0;
+
+                    return logLevel >= given.FirstOrDefault().Value;
+                };
             }
             catch (Exception ex)
             {
@@ -48,7 +76,7 @@ namespace RR.LoggerService.Core
         {
             try
             {
-                return _loggers.GetOrAdd(categoryName, cName => new Logger(cName, _loggerAction));
+                return _loggers.GetOrAdd(categoryName, cName => new Logger(cName, _filter, _loggerAction));
             }
             catch (Exception ex)
             {

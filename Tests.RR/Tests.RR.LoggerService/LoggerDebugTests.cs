@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RR.LoggerService.DebugLoggerService;
+using System;
+using System.Collections.Generic;
 using Tests.Extensions;
 
 namespace Tests.RR.Logger
@@ -19,8 +21,15 @@ namespace Tests.RR.Logger
             Assert.IsNotNull(serviceCollection);
 
             DebugLoggerConfiguration _loggerConfiguration = new DebugLoggerConfiguration();
-            _loggerConfiguration.LogLevel.GetOrAdd("LoggerDebugTest", LogLevel.Trace);
-            serviceCollection.AddDebugLogger(_loggerConfiguration);
+            //_loggerConfiguration.LogLevel.GetOrAdd("Tests.RR.Logger.LoggerDebugTests", new List<LogLevel>() { LogLevel.Warning });
+            //_loggerConfiguration.LogLevel.GetOrAdd("Tests.RR.Logger",  LogLevel.Warning );
+            _loggerConfiguration.LogLevel.GetOrAdd("aaa.RR.Logger", LogLevel.Warning);
+            _loggerConfiguration.LogLevel.GetOrAdd("bbb.RR", LogLevel.Warning);
+            _loggerConfiguration.LogLevel.GetOrAdd("bbb", LogLevel.Warning);
+            _loggerConfiguration.LogLevel.GetOrAdd("int", LogLevel.Warning);
+            _loggerConfiguration.LogLevel.GetOrAdd("Tests.RR", LogLevel.Trace);
+
+            serviceCollection.AddDebugLogger(_loggerConfiguration, true);
 
             ServiceProvider serviceProvider = null;
             AssertH.DoesNotThrow(() => serviceProvider = serviceCollection.BuildServiceProvider());
@@ -35,6 +44,9 @@ namespace Tests.RR.Logger
         {
             var _logger = loggerFactory.CreateLogger<LoggerDebugTests>();
             AssertH.DoesNotThrow(() => _logger.LogInformation("GetLogger pass...!"));
+
+            var _logger2 = loggerFactory.CreateLogger<int>();
+            AssertH.DoesNotThrow(() => _logger2.LogInformation("_logger2 pass...!"));
         }
     }
 }

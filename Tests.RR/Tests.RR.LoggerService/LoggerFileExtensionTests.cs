@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RR.LoggerService.FileLoggerService;
 using System;
+using System.Collections.Generic;
 using Tests.Extensions;
 
 namespace Tests.RR.LoggerService
@@ -44,7 +45,7 @@ namespace Tests.RR.LoggerService
         public void AddFileLogger()
         {
             FileLoggerConfiguration _loggerConfiguration = new FileLoggerConfiguration();
-            _loggerConfiguration.LogLevel.GetOrAdd("LoggerFileTest", LogLevel.Trace);
+            _loggerConfiguration.LogLevel.GetOrAdd("LoggerFileTest",  LogLevel.Trace );
 
             AssertH.DoesNotThrow(() => serviceCollection.AddFileLogger(_loggerConfiguration));
         }

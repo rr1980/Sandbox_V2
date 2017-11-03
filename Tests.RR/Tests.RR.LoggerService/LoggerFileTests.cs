@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RR.LoggerService.FileLoggerService;
+using System.Collections.Generic;
 using Tests.Extensions;
 
 namespace Tests.RR.Logger
@@ -19,7 +20,7 @@ namespace Tests.RR.Logger
             Assert.IsNotNull(serviceCollection);
 
             FileLoggerConfiguration _loggerConfiguration = new FileLoggerConfiguration();
-            _loggerConfiguration.LogLevel.GetOrAdd("LoggerFileTest", LogLevel.Trace);
+            _loggerConfiguration.LogLevel.GetOrAdd("LoggerFileTest",  LogLevel.Trace );
             serviceCollection.AddFileLogger(_loggerConfiguration);
 
             ServiceProvider serviceProvider = null;
