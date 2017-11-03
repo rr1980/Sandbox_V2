@@ -5,6 +5,7 @@ namespace RR.LoggerService.Common
 {
     internal interface ILoggerConfiguration
     {
-        ConcurrentDictionary<string, LogLevel> LogLevel { get; set; }
+        LogLevel MinLevel { get; set; }
+        ConcurrentDictionary<string, LogLevel> LogLevels { get; set; }
     }
 }

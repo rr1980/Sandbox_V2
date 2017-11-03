@@ -20,7 +20,9 @@ namespace Tests.RR.Logger
             Assert.IsNotNull(serviceCollection);
 
             FileLoggerConfiguration _loggerConfiguration = new FileLoggerConfiguration();
-            _loggerConfiguration.LogLevel.GetOrAdd("LoggerFileTest",  LogLevel.Trace );
+            _loggerConfiguration.LogLevels.GetOrAdd("LoggerFileTest",  LogLevel.Trace );
+            //_loggerConfiguration.MinLevel = LogLevel.Warning;
+
             serviceCollection.AddFileLogger(_loggerConfiguration);
 
             ServiceProvider serviceProvider = null;

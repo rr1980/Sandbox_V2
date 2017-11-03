@@ -23,11 +23,11 @@ namespace Tests.RR.Logger
             DebugLoggerConfiguration _loggerConfiguration = new DebugLoggerConfiguration();
             //_loggerConfiguration.LogLevel.GetOrAdd("Tests.RR.Logger.LoggerDebugTests", new List<LogLevel>() { LogLevel.Warning });
             //_loggerConfiguration.LogLevel.GetOrAdd("Tests.RR.Logger",  LogLevel.Warning );
-            _loggerConfiguration.LogLevel.GetOrAdd("aaa.RR.Logger", LogLevel.Warning);
-            _loggerConfiguration.LogLevel.GetOrAdd("bbb.RR", LogLevel.Warning);
-            _loggerConfiguration.LogLevel.GetOrAdd("bbb", LogLevel.Warning);
-            _loggerConfiguration.LogLevel.GetOrAdd("int", LogLevel.Warning);
-            _loggerConfiguration.LogLevel.GetOrAdd("Tests.RR", LogLevel.Trace);
+            _loggerConfiguration.LogLevels.GetOrAdd("aaa.RR.Logger", LogLevel.Warning);
+            _loggerConfiguration.LogLevels.GetOrAdd("bbb.RR", LogLevel.Warning);
+            _loggerConfiguration.LogLevels.GetOrAdd("bbb", LogLevel.Warning);
+            _loggerConfiguration.LogLevels.GetOrAdd("int", LogLevel.Warning);
+            _loggerConfiguration.LogLevels.GetOrAdd("Tests.RR", LogLevel.Trace);
 
             serviceCollection.AddDebugLogger(_loggerConfiguration, true);
 

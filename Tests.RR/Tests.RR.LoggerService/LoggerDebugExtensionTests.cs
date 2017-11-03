@@ -36,7 +36,7 @@ namespace Tests.RR.LoggerService
 
             DebugLoggerConfiguration _loggerConfiguration = new DebugLoggerConfiguration()
             {
-                LogLevel = null
+                LogLevels = null
             };
             Assert.ThrowsException<DebugLoggerException>(() => serviceCollection.AddDebugLogger(_loggerConfiguration));
         }
@@ -45,7 +45,7 @@ namespace Tests.RR.LoggerService
         public void AddDebugLogger()
         {
             DebugLoggerConfiguration _loggerConfiguration = new DebugLoggerConfiguration();
-            _loggerConfiguration.LogLevel.GetOrAdd("LoggerDebugTest",  LogLevel.Trace );
+            _loggerConfiguration.LogLevels.GetOrAdd("LoggerDebugTest",  LogLevel.Trace );
 
             AssertH.DoesNotThrow(() => serviceCollection.AddDebugLogger(_loggerConfiguration));
         }

@@ -18,7 +18,7 @@ namespace RR.LoggerService.DebugLoggerService
                 throw new ArgumentNullException("loggerConfiguration");
             }
 
-            if (loggerConfiguration.LogLevel == null || !loggerConfiguration.LogLevel.Any())
+            if (loggerConfiguration.LogLevels == null || !loggerConfiguration.LogLevels.Any())
             {
                 throw new ArgumentException("Collection loggerConfiguration.LogLevel is null or count = zero!", "loggerConfiguration.LogLevel");
             }

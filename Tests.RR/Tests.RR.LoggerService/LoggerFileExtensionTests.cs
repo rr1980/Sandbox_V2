@@ -36,7 +36,7 @@ namespace Tests.RR.LoggerService
 
             FileLoggerConfiguration _loggerConfiguration = new FileLoggerConfiguration()
             {
-                LogLevel = null
+                LogLevels = null
             };
             Assert.ThrowsException<FileLoggerException>(() => serviceCollection.AddFileLogger(_loggerConfiguration));
         }
@@ -45,7 +45,7 @@ namespace Tests.RR.LoggerService
         public void AddFileLogger()
         {
             FileLoggerConfiguration _loggerConfiguration = new FileLoggerConfiguration();
-            _loggerConfiguration.LogLevel.GetOrAdd("LoggerFileTest",  LogLevel.Trace );
+            _loggerConfiguration.LogLevels.GetOrAdd("LoggerFileTest",  LogLevel.Trace );
 
             AssertH.DoesNotThrow(() => serviceCollection.AddFileLogger(_loggerConfiguration));
         }

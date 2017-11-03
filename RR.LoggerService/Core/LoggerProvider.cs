@@ -4,39 +4,33 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace RR.LoggerService.Core
 {
-    internal class LoggerProvider : ILoggerProvider
+    internal class LoggerProvider<T> : ILoggerProvider where T : class
     {
         private readonly ILoggerConfiguration _loggerConfiguration;
         private readonly ConcurrentDictionary<string, ILogger> _loggers = new ConcurrentDictionary<string, ILogger>();
-        private readonly ILoggerAction _loggerAction;
 
-        public LoggerProvider(ILoggerAction loggerAction, ILoggerConfiguration loggerConfiguration)
+        public LoggerProvider(ILoggerConfiguration loggerConfiguration)
         {
             try
             {
                 #region throwExceptions
-
-                if (loggerAction == null)
-                {
-                    throw new ArgumentNullException("loggerAction");
-                }
 
                 if (loggerConfiguration == null)
                 {
                     throw new ArgumentNullException("loggerConfiguration");
                 }
 
-                if (loggerConfiguration.LogLevel == null || !loggerConfiguration.LogLevel.Any())
+                if (loggerConfiguration.LogLevels == null || !loggerConfiguration.LogLevels.Any())
                 {
                     throw new ArgumentException("Collection loggerConfiguration.LogLevel is null or count = zero!", "loggerConfiguration.LogLevel");
                 }
 
                 #endregion throwExceptions
 
-                _loggerAction = loggerAction;
                 _loggerConfiguration = loggerConfiguration;
             }
             catch (Exception ex)
@@ -49,7 +43,7 @@ namespace RR.LoggerService.Core
         {
             try
             {
-                return _loggers.GetOrAdd(categoryName, cName => new Logger(cName, _getFilterLogLvl(categoryName), _loggerAction));
+                return _loggers.GetOrAdd(categoryName, cName => new Logger(cName, _getFilterLogLvl(categoryName), LoggerHelper.CreateInstance_ILoggerAction<T>(_loggerConfiguration)));
             }
             catch (Exception ex)
             {
@@ -63,7 +57,7 @@ namespace RR.LoggerService.Core
 
         private LogLevel _getFilterLogLvl(string categoryName)
         {
-            if (_loggerConfiguration.LogLevel.TryGetValue(categoryName, out var l))
+            if (_loggerConfiguration.LogLevels.TryGetValue(categoryName, out var l))
             {
                 return l;
             }
@@ -74,7 +68,7 @@ namespace RR.LoggerService.Core
                 {
 
                     var v = String.Join(".", strA.Take(i));
-                    if (_loggerConfiguration.LogLevel.TryGetValue(v, out var ll))
+                    if (_loggerConfiguration.LogLevels.TryGetValue(v, out var ll))
                     {
                         return ll;
                     }
@@ -82,12 +76,12 @@ namespace RR.LoggerService.Core
 
             }
 
-            if (_loggerConfiguration.LogLevel.TryGetValue("Default", out var lll))
-            {
-                return l;
-            }
+            //if (_loggerConfiguration.LogLevels.TryGetValue("Default", out var lll))
+            //{
+            //    return l;
+            //}
 
-            return LogLevel.Trace;
+            return _loggerConfiguration.MinLevel;
         }
     }
 }
