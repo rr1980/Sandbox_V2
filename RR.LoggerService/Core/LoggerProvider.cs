@@ -12,8 +12,10 @@ namespace RR.LoggerService.Core
     {
         private readonly ILoggerConfiguration _loggerConfiguration;
         private readonly ConcurrentDictionary<string, ILogger> _loggers = new ConcurrentDictionary<string, ILogger>();
+        private readonly ILogger _selfLogger;
+        private readonly string _name;
 
-        public LoggerProvider(ILoggerConfiguration loggerConfiguration)
+        public LoggerProvider(string name, ILoggerConfiguration loggerConfiguration)
         {
             try
             {
@@ -31,7 +33,11 @@ namespace RR.LoggerService.Core
 
                 #endregion throwExceptions
 
+                _name = string.IsNullOrEmpty(name) == true ? "SelfLoggerAction<" + typeof(T).Name + ">" : name;
                 _loggerConfiguration = loggerConfiguration;
+
+                _selfLogger = new Logger(name, _loggerConfiguration.SelfLogLevel, _loggerConfiguration, new SelfLoggerAction(_loggerConfiguration.SelfLogLevel, _loggerConfiguration));
+                _selfLogger.LogDebug("LoggerProvider init finish");
             }
             catch (Exception ex)
             {
@@ -43,7 +49,9 @@ namespace RR.LoggerService.Core
         {
             try
             {
-                return _loggers.GetOrAdd(categoryName, cName => new Logger(cName, _getFilterLogLvl(categoryName), LoggerHelper.CreateInstance_ILoggerAction<T>(_loggerConfiguration)));
+                var __logLevel = LoggerHelper.GetFilterLogLvl(categoryName, _loggerConfiguration);
+                _selfLogger.LogDebug("LoggerProvider CreateLogger with: '" + __logLevel + "' for '" + categoryName + "'");
+                return _loggers.GetOrAdd(categoryName, cName => new Logger(cName, __logLevel, _loggerConfiguration, LoggerHelper.CreateInstance_ILoggerAction<T>(cName, _loggerConfiguration, _selfLogger), _selfLogger));
             }
             catch (Exception ex)
             {
@@ -53,35 +61,6 @@ namespace RR.LoggerService.Core
 
         public void Dispose()
         {
-        }
-
-        private LogLevel _getFilterLogLvl(string categoryName)
-        {
-            if (_loggerConfiguration.LogLevels.TryGetValue(categoryName, out var l))
-            {
-                return l;
-            }
-            else
-            {
-                var strA = categoryName.Split(".");
-                for (int i = strA.Length; i > 0; i--)
-                {
-
-                    var v = String.Join(".", strA.Take(i));
-                    if (_loggerConfiguration.LogLevels.TryGetValue(v, out var ll))
-                    {
-                        return ll;
-                    }
-                }
-
-            }
-
-            //if (_loggerConfiguration.LogLevels.TryGetValue("Default", out var lll))
-            //{
-            //    return l;
-            //}
-
-            return _loggerConfiguration.MinLevel;
         }
     }
 }

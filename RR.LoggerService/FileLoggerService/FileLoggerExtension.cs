@@ -32,7 +32,7 @@ namespace RR.LoggerService.FileLoggerService
                     {
                         loggingBuilder.ClearProviders();
                     }
-                    loggingBuilder.AddProvider(new LoggerProvider<FileLoggerAction>(loggerConfiguration)).SetMinimumLevel(LogLevel.Trace);
+                    loggingBuilder.AddProvider(new LoggerProvider<FileLoggerAction>("FileLogger", loggerConfiguration)).SetMinimumLevel(LogLevel.Trace);
                 });
 
                 return services;

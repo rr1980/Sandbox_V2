@@ -26,15 +26,13 @@ namespace RR.LoggerService.DebugLoggerService
 
                 #endregion throwExceptions
 
-                var tmp = services.FirstOrDefault(s => s.ServiceType == typeof(ILoggingBuilder));
-
                 services.AddLogging(loggingBuilder =>
                 {
                     if (cleanAllProviders)
                     {
                         loggingBuilder.ClearProviders();
                     }
-                    loggingBuilder.AddProvider(new LoggerProvider<DebugLoggerAction>(loggerConfiguration)).SetMinimumLevel(LogLevel.Trace);
+                    loggingBuilder.AddProvider(new LoggerProvider<DebugLoggerAction>("DebugLogger", loggerConfiguration)).SetMinimumLevel(LogLevel.Trace);
                 });
 
                 return services;

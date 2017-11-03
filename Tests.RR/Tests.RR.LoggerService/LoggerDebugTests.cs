@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RR.LoggerService.DebugLoggerService;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Tests.Extensions;
 
 namespace Tests.RR.Logger
@@ -28,7 +29,8 @@ namespace Tests.RR.Logger
             _loggerConfiguration.LogLevels.GetOrAdd("bbb", LogLevel.Warning);
             _loggerConfiguration.LogLevels.GetOrAdd("int", LogLevel.Warning);
             _loggerConfiguration.LogLevels.GetOrAdd("Tests.RR", LogLevel.Trace);
-
+            _loggerConfiguration.MinLevel = LogLevel.Information;
+            _loggerConfiguration.SelfLogLevel = LogLevel.Trace;
             serviceCollection.AddDebugLogger(_loggerConfiguration, true);
 
             ServiceProvider serviceProvider = null;
@@ -47,6 +49,7 @@ namespace Tests.RR.Logger
 
             var _logger2 = loggerFactory.CreateLogger<int>();
             AssertH.DoesNotThrow(() => _logger2.LogInformation("_logger2 pass...!"));
+
         }
     }
 }

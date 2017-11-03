@@ -8,5 +8,6 @@ namespace RR.LoggerService.FileLoggerService
     {
         public ConcurrentDictionary<string, LogLevel> LogLevels { get; set; } = new ConcurrentDictionary<string, Microsoft.Extensions.Logging.LogLevel>();
         public LogLevel MinLevel { get; set; } = LogLevel.Trace;
+        public LogLevel SelfLogLevel { get; set; } = LogLevel.Warning;
     }
 }
