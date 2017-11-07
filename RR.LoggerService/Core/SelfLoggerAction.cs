@@ -2,6 +2,7 @@
 using RR.LoggerService.Common;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace RR.LoggerService.Core
 {
@@ -16,11 +17,12 @@ namespace RR.LoggerService.Core
             _loggerConfiguration = loggerConfiguration;
         }
 
-        public void Log<TState>(string categoryName, LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        public async Task LogAsync<TState>(ILoggerMessage<TState> loggerMessage)
         {
-            if (logLevel >= _selfLogLevel)
+            if (loggerMessage.LogLevel >= _selfLogLevel)
             {
-                Debug.WriteLine(DateTime.Now + " " + logLevel + " : " + categoryName + " : " + formatter(state, exception));
+                Debug.WriteLine(DateTime.Now + " " + loggerMessage.LogLevel + " : " + loggerMessage.CategoryName + " : " + loggerMessage.Formatter(loggerMessage.State, loggerMessage.Exception));
+                await Task.FromResult(1);
             }
         }
     }

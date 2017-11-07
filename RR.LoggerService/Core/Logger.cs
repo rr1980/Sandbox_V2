@@ -66,7 +66,7 @@ namespace RR.LoggerService.Core
             return result;
         }
 
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        public async void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
             try
             {
@@ -76,15 +76,36 @@ namespace RR.LoggerService.Core
                 }
 
 
-                
+                var lm = new LoggerMessage<TState>(_categoryName, logLevel, eventId, state, exception, formatter);
 
                 _selfLogger?.LogTrace("Logger Log run '" + _categoryName + "' (fire and forget)");
-                Task.Run(() => _loggerAction.Log(_categoryName, logLevel, eventId, state, exception, formatter));
+                await _loggerAction.LogAsync<TState>(lm);
+                //Task.Run(() => _loggerAction.Log(_categoryName, logLevel, eventId, state, exception, formatter));
             }
             catch (Exception ex)
             {
                 throw new LoggerException("Logger Log faild!", ex);
             }
+        }
+    }
+
+    internal class LoggerMessage<TState> : ILoggerMessage<TState>
+    {
+        public string CategoryName { get; private set; }
+        public LogLevel LogLevel { get; private set; }
+        public EventId EventId { get; private set; }
+        public TState State { get; private set; }
+        public Exception Exception { get; private set; }
+        public Func<TState, Exception, string> Formatter { get; private set; }
+
+        public LoggerMessage(string categoryName, LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        {
+            CategoryName = categoryName;
+            LogLevel = logLevel;
+            EventId = eventId;
+            State = state;
+            Exception = exception;
+            Formatter = formatter;
         }
     }
 }

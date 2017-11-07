@@ -20,10 +20,10 @@ namespace RR.LoggerService
                     throw new ArgumentNullException("loggerConfiguration");
                 }
 
-                if (loggerConfiguration.LogLevels == null || !loggerConfiguration.LogLevels.Any())
-                {
-                    throw new ArgumentException("Collection loggerConfiguration.LogLevel is null or count = zero!", "loggerConfiguration.LogLevel");
-                }
+                //if (loggerConfiguration.LogLevels == null || !loggerConfiguration.LogLevels.Any())
+                //{
+                //    throw new ArgumentException("Collection loggerConfiguration.LogLevel is null or count = zero!", "loggerConfiguration.LogLevel");
+                //}
 
                 #endregion throwExceptions
 

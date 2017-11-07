@@ -6,6 +6,6 @@ namespace RR.LoggerService.Common
 {
     public interface ILoggerAction
     {
-        void Log<TState>(string categoryName, LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter);
+        Task LogAsync<TState>(ILoggerMessage<TState> loggerMessage);
     }
 }

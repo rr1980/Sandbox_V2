@@ -57,12 +57,10 @@ namespace RR.LoggerService.Core
             {
                 await task;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                // log errors
+                throw new LoggerException("LoggerHelper FireAndForget faild!", ex);
             }
         }
     }
-
-
 }

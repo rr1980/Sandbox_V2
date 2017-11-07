@@ -2,6 +2,7 @@
 using RR.LoggerService.Common;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace RR.LoggerService.DebugLoggerService
 {
@@ -45,16 +46,17 @@ namespace RR.LoggerService.DebugLoggerService
             }
         }
 
-        public void Log<TState>(string categoryName, LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        public async Task LogAsync<TState>(ILoggerMessage<TState> loggerMessage)
         {
             try
             {
-                Debug.WriteLine(DateTime.Now + " " + logLevel + " : " + categoryName + " : " + formatter(state, exception));
-                _selfLogger.LogTrace("DebugLoggerAction Log run: '" + categoryName + "'");
+                Debug.WriteLine(DateTime.Now + " " + loggerMessage.LogLevel + " : " + loggerMessage.CategoryName + " : " + loggerMessage.Formatter(loggerMessage.State, loggerMessage.Exception));
+                _selfLogger.LogTrace("DebugLoggerAction Log run: '" + loggerMessage.CategoryName + "'");
+                await Task.FromResult(1);
             }
             catch (Exception ex)
             {
-                throw new DebugLoggerException("DebugLoggerAction Log failed for: " + categoryName, ex);
+                throw new DebugLoggerException("DebugLoggerAction Log failed for: " + loggerMessage.CategoryName, ex);
             }
         }
     }
