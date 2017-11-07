@@ -24,8 +24,73 @@ namespace Main
             _logger.LogDebug("ExampleService DoSomeWork");
             Console.WriteLine("inside ExampleService.DoSomeWork()");
 
+            try
+            {
+                var tmp = _getName("Rene", 21);
+
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("BÄM 2", ex);
+            }
             Console.ReadLine();
             _logger.LogDebug("ExampleService DoSomeWork ends");
+        }
+
+        private string _getName(string name, int alter)
+        {
+            try
+            {
+                var tmp = _getName2("Rene", 21);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("BÄM 2", ex);
+            }
+
+            _logger.LogWarning("ExampleService _getName ends");
+            return name + " ist " + alter + " JAhre alt!";
+        }
+
+        private string _getName2(string name, int alter)
+        {
+            try
+            {
+                var tmp = _getName3("Rene", 21);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("BÄM 2", ex);
+            }
+
+            _logger.LogWarning("ExampleService _getName ends");
+            return name + " ist " + alter + " JAhre alt!";
+        }
+
+        private string _getName3(string name, int alter)
+        {
+            try
+            {
+                var tmp = _getName4("Rene", 21);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("BÄM 2", ex);
+            }
+
+            _logger.LogWarning("ExampleService _getName ends");
+            return name + " ist " + alter + " JAhre alt!";
+        }
+
+        private string _getName4(string name, int alter)
+        {
+
+                throw new Exception("BÄM END!");
+
+            return name + " ist " + alter + " JAhre alt!";
         }
     }
 }

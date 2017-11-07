@@ -22,12 +22,19 @@ namespace Main
             var lf = serviceProvider.GetService<ILoggerFactory>();
             var logger = lf.CreateLogger<Program>();
 
-            logger.LogDebug("Try start Task");
-            var task = Task.Run((Action)app.Run);
-            logger.LogInformation("Task started");
-            Console.WriteLine("End");
+            try
+            {
+                logger.LogDebug("Try start Task");
+                var task = Task.Run((Action)app.Run);
+                logger.LogInformation("Task started");
 
-            task.Wait();
+                task.Wait();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Fail!", ex);
+            }
+            Console.WriteLine("End");
         }
 
         private static void ConfigureServices(IServiceCollection services)
@@ -48,8 +55,8 @@ namespace Main
             //services.AddLogger(options.Value.LoggerConfiguration);
             DebugLoggerConfiguration _loggerConfiguration = new DebugLoggerConfiguration();
 
-            //_loggerConfiguration.LogLevels.GetOrAdd("Tests.RR", LogLevel.Trace);
-            _loggerConfiguration.MinLevel = LogLevel.Trace;
+            _loggerConfiguration.LogLevels.GetOrAdd("Main", LogLevel.Warning);
+            _loggerConfiguration.MinLevel = LogLevel.Information;
             _loggerConfiguration.SelfLogLevel = LogLevel.Warning;
             services.AddRRLogger<DebugLoggerConfiguration, DebugLoggerAction>("DebugLogger", _loggerConfiguration, true);
 

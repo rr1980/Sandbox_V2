@@ -2,6 +2,8 @@
 using RR.LoggerService.Common;
 using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RR.LoggerService.Core
@@ -75,37 +77,53 @@ namespace RR.LoggerService.Core
                     return;
                 }
 
-
-                var lm = new LoggerMessage<TState>(_categoryName, logLevel, eventId, state, exception, formatter);
+                var mn = _getMethodName(new StackTrace(), exception);
+                var lm = new LoggerMessage<TState>(_categoryName, mn, logLevel, eventId, state, exception, formatter);
 
                 _selfLogger?.LogTrace("Logger Log run '" + _categoryName + "' (fire and forget)");
                 await _loggerAction.LogAsync<TState>(lm);
-                //Task.Run(() => _loggerAction.Log(_categoryName, logLevel, eventId, state, exception, formatter));
             }
             catch (Exception ex)
             {
                 throw new LoggerException("Logger Log faild!", ex);
             }
         }
-    }
 
-    internal class LoggerMessage<TState> : ILoggerMessage<TState>
-    {
-        public string CategoryName { get; private set; }
-        public LogLevel LogLevel { get; private set; }
-        public EventId EventId { get; private set; }
-        public TState State { get; private set; }
-        public Exception Exception { get; private set; }
-        public Func<TState, Exception, string> Formatter { get; private set; }
-
-        public LoggerMessage(string categoryName, LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        private string _getMethodName(StackTrace stackTrace, Exception exception)
         {
-            CategoryName = categoryName;
-            LogLevel = logLevel;
-            EventId = eventId;
-            State = state;
-            Exception = exception;
-            Formatter = formatter;
+            if(exception != null)
+            {
+                return _getLastExceptionTarget(exception).ToString();
+            }
+            else
+            {
+                return _getLastStackTraceTarget(stackTrace)?.ToString();
+            }
+        }
+
+        private MethodBase _getLastStackTraceTarget(StackTrace stackTrace)
+        {
+            var m = stackTrace.GetFrames().FirstOrDefault(f=>f.GetMethod().DeclaringType.FullName == _categoryName);
+            if (m != null)
+            {
+                return m.GetMethod();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private MethodBase _getLastExceptionTarget(Exception exception)
+        {
+            if (exception.InnerException != null)
+            {
+                return _getLastExceptionTarget(exception.InnerException);
+            }
+            else
+            {
+                return exception.TargetSite;
+            }
         }
     }
 }
